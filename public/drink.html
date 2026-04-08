@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ร้านปลข้าวขาหมู</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;700;900&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #c0392b;
+    --red-dark: #96281b;
+    --red-light: #e74c3c;
+    --gold: #e8a020;
+    --gold-light: #f5c842;
+    --cream: #fdf6e8;
+    --cream-dark: #f5e8c8;
+    --brown: #5a3825;
+    --brown-light: #8b5e3c;
+    --text: #2c1810;
+    --text-soft: #6b4226;
+    --white: #fff;
+    --shadow: 0 4px 20px rgba(90,56,37,0.15);
+    --shadow-strong: 0 8px 32px rgba(90,56,37,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 50%, #d44000 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 28px 20px 22px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(150,40,27,0.4);
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .header-inner { position: relative; }
+  .shop-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 4px; }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-shadow: 2px 3px 8px rgba(0,0,0,0.3);
+  }
+
+  header p {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .bill-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--gold);
+    color: var(--brown);
+    border: none;
+    border-radius: 50px;
+    padding: 14px 22px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-strong);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 200;
+    transition: all 0.2s;
+  }
+  .bill-toggle:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .bill-count {
+    background: var(--red);
+    color: white;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 100px;
+  }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--red-dark);
+    padding: 10px 16px;
+    background: linear-gradient(90deg, rgba(192,57,43,0.12), transparent);
+    border-left: 4px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===== UNIFIED MENU BLOCK ===== */
+  .unified-block {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 1.5px solid rgba(232,160,32,0.25);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .unified-header {
+    background: linear-gradient(135deg, var(--cream-dark), var(--cream));
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid rgba(232,160,32,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .unified-icon { font-size: 1.8rem; }
+  .unified-title-col { flex: 1; }
+  .unified-name { font-size: 1rem; font-weight: 800; color: var(--text); }
+  .unified-hint { font-size: 0.78rem; color: var(--text-soft); margin-top: 2px; }
+
+  .price-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .price-tag {
+    background: var(--red);
+    color: white;
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .price-tag.gold { background: var(--gold); color: var(--brown); }
+
+  .unified-body { padding: 14px 18px 16px; }
+
+  /* Choice chips */
+  .choices-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .choices-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .choice-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 2px solid var(--cream-dark);
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    background: var(--cream);
+    color: var(--text-soft);
+    user-select: none;
+    position: relative;
+  }
+
+  .choice-chip:hover { border-color: var(--gold-light); background: rgba(232,160,32,0.08); }
+
+  .choice-chip.selected {
+    border-color: var(--gold);
+    background: rgba(232,160,32,0.18);
+    color: var(--brown);
+    box-shadow: 0 2px 8px rgba(232,160,32,0.25);
+  }
+
+  .choice-chip.disabled-chip {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .chip-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--red);
+    color: white;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chip-badge.show { display: flex; }
+
+  /* Current selection display */
+  .selection-display {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .sel-label { font-size: 0.78rem; color: var(--text-soft); }
+  .sel-value { font-size: 0.88rem; font-weight: 700; color: var(--brown); }
+  .sel-price { font-size: 0.88rem; font-weight: 900; color: var(--red); margin-left: auto; }
+
+  /* Extras row */
+  .extras-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .extra-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: var(--cream);
+    color: var(--text-soft);
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .extra-chip:hover { border-color: var(--gold-light); background: rgba(232,160,32,0.08); }
+  .extra-chip.selected {
+    border-color: var(--gold);
+    background: rgba(232,160,32,0.18);
+    color: var(--brown);
+  }
+
+  .extra-price { font-size: 0.75rem; color: var(--gold); font-weight: 700; }
+
+  /* Footer */
+  .unified-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px 16px;
+    border-top: 1px dashed rgba(232,160,32,0.3);
+  }
+
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 4px 8px;
+  }
+
+  .qty-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cream-dark);
+    color: var(--brown);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .qty-btn:hover { background: var(--gold-light); }
+
+  .qty-num {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .add-btn {
+    flex: 1;
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .add-btn:hover { background: var(--red-light); transform: scale(1.02); }
+  .add-btn:active { transform: scale(0.97); }
+
+  /* side-grid removed — now unified block */
+
+  /* ===== BILL OVERLAY ===== */
+  .bill-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44,24,16,0.6);
+    z-index: 300;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+  }
+  .bill-overlay.open { display: flex; }
+
+  .bill-sheet {
+    background: var(--white);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    border-radius: 24px 24px 0 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -8px 40px rgba(90,56,37,0.3);
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .bill-header {
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: var(--white);
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .bill-header h2 { font-size: 1.2rem; font-weight: 800; }
+  .bill-header p { font-size: 0.8rem; opacity: 0.8; }
+
+  .close-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .close-btn:hover { background: rgba(255,255,255,0.35); }
+
+  /* Table selector */
+  .table-selector {
+    background: var(--cream);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+
+  .table-selector-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .table-required-hint {
+    font-size: 0.72rem;
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  .table-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .table-btn {
+    min-width: 40px;
+    height: 36px;
+    border-radius: 10px;
+    border: 2px solid var(--cream-dark);
+    background: var(--white);
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0 8px;
+  }
+
+  .table-btn:hover { border-color: var(--gold); background: rgba(232,160,32,0.08); }
+
+  .table-btn.selected {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+    box-shadow: 0 2px 8px rgba(192,57,43,0.3);
+  }
+
+  .table-btn.takeaway.selected {
+    background: var(--brown);
+    border-color: var(--brown);
+  }
+
+  .bill-body {
+    overflow-y: auto;
+    flex: 1;
+    padding: 16px 20px;
+  }
+
+  .bill-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-soft);
+    font-size: 0.95rem;
+  }
+
+  .bill-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+
+  .bill-item:last-child { border-bottom: none; }
+
+  .bill-item-name {
+    flex: 1;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .bill-item-extras {
+    font-size: 0.78rem;
+    color: var(--text-soft);
+    font-weight: 400;
+    margin-top: 2px;
+  }
+
+  .bill-item-qty {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+    white-space: nowrap;
+  }
+
+  .bill-item-price {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--red);
+    white-space: nowrap;
+  }
+
+  .bill-item-del {
+    background: none;
+    border: none;
+    color: #bbb;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    transition: color 0.15s;
+  }
+  .bill-item-del:hover { color: var(--red); }
+
+  .bill-footer {
+    background: var(--cream);
+    border-top: 2px solid var(--cream-dark);
+    padding: 16px 20px;
+  }
+
+  .bill-table-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.88rem;
+    color: var(--text-soft);
+  }
+
+  .bill-table-display strong {
+    color: var(--red);
+    font-size: 1rem;
+  }
+
+  .bill-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .bill-total-label { font-size: 1.05rem; font-weight: 700; }
+  .bill-total-amount { font-size: 1.6rem; font-weight: 900; color: var(--red); }
+
+  .print-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: var(--white);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .print-btn:hover { opacity: 0.9; }
+
+  .clear-btn {
+    width: 100%;
+    background: none;
+    border: 1.5px solid var(--cream-dark);
+    color: var(--text-soft);
+    border-radius: 14px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.15s;
+  }
+  .clear-btn:hover { background: var(--cream-dark); }
+
+  @media print {
+    body * { display: none !important; }
+    #print-area, #print-area * { display: block !important; }
+    #print-area {
+      position: fixed;
+      inset: 0;
+      background: white;
+      z-index: 9999;
+      padding: 20px;
+      font-family: 'Noto Sans Thai', sans-serif;
+    }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--brown);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 400;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.5rem; }
+    .choices-grid { gap: 6px; }
+    .choice-chip { font-size: 0.82rem; padding: 7px 11px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="shop-icon">🍱</div>
+    <h1>ร้านปลข้าวขาหมู</h1>
+    <p>ข้าวขาหมู • ข้าวหมูแดง • ข้าวมันไก่ • ข้าวหมูกรอบ</p>
+  </div>
+</header>
+
+<div class="container" id="menu-container"></div>
+
+<button class="bill-toggle" onclick="openBill()">
+  🧾 บิล
+  <span class="bill-count" id="bill-count">0</span>
+</button>
+
+<div class="bill-overlay" id="bill-overlay" onclick="handleOverlayClick(event)">
+  <div class="bill-sheet">
+    <div class="bill-header">
+      <div>
+        <h2>🧾 บิลสั่งอาหาร</h2>
+        <p id="bill-datetime"></p>
+      </div>
+      <button class="close-btn" onclick="closeBill()">✕</button>
+    </div>
+
+    <!-- Table selector -->
+    <div class="table-selector">
+      <div class="table-selector-title">
+        🪑 เลือกโต๊ะ <span class="table-required-hint" id="table-hint"></span>
+      </div>
+      <div class="table-grid" id="table-grid"></div>
+    </div>
+
+    <div class="bill-body" id="bill-body">
+      <div class="bill-empty">🍽️ ยังไม่มีรายการ<br>เลือกเมนูเพื่อเพิ่มลงบิล</div>
+    </div>
+
+    <div class="bill-footer">
+      <div class="bill-table-display" id="bill-table-display" style="display:none">
+        📍 โต๊ะ: <strong id="bill-table-name">—</strong>
+      </div>
+      <div class="bill-total">
+        <span class="bill-total-label">ยอดรวมทั้งหมด</span>
+        <span class="bill-total-amount" id="bill-total">฿0</span>
+      </div>
+      <button class="print-btn" onclick="printBill()">🖨️ พิมพ์บิล</button>
+      <button class="clear-btn" onclick="clearBill()">🗑️ ล้างบิลทั้งหมด</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="print-area" style="display:none"></div>
+
+<script>
+// ===== DATA =====
+const DRINKS = [
+  { id:'d1', name:'กาแฟเย็น', price:30, type:'cold' },
+  { id:'d2', name:'ชาเย็น', price:30, type:'cold' },
+  { id:'d3', name:'ชาเขียว', price:30, type:'cold' },
+  { id:'d4', name:'ชามะนาว', price:30, type:'cold' },
+  { id:'d5', name:'เนสกาแฟเย็น', price:30, type:'cold' },
+  { id:'d6', name:'โอวันติน', price:30, type:'cold' },
+  { id:'d7', name:'นมสด', price:30, type:'cold' },
+  { id:'d8', name:'นมเย็นโบราณ', price:30, type:'cold' },
+  { id:'d9', name:'แดงโซดามะนาว', price:30, type:'cold' },
+
+  { id:'d10', name:'โอวันตินร้อน', price:15, type:'hot' },
+  { id:'d11', name:'กาแฟโบราณร้อน', price:15, type:'hot' },
+
+  { id:'d12', name:'โอเลี้ยง', price:20, type:'cold' },
+];
+
+const SWEET_LEVEL = ['หวานปกติ','หวานน้อย','ไม่หวาน'];
+const ICE_LEVEL = ['น้ำแข็งปกติ','น้ำแข็งน้อย','ไม่เอาน้ำแข็ง'];
+
+const TABLES = [
+  ...Array.from({length:16}, (_,i)=>({id:`t${i+1}`,label:`${i+1}`})),
+  {id:'ta',label:'A'},
+  {id:'tb',label:'B'},
+  {id:'tc',label:'C'},
+  {id:'takeaway',label:'🛍 กลับบ้าน',isTakeaway:true},
+];
+
+// ===== STATE =====
+let drinkSelected=null;
+let sweetSelected=SWEET_LEVEL[0];
+let iceSelected=ICE_LEVEL[0];
+let drinkQty=1;
+
+let billItems=[];
+let itemSeq=0;
+let selectedTable=null;
+
+// ===== RENDER =====
+function renderMenu(){
+  const c=document.getElementById('menu-container');
+
+  const chips=DRINKS.map(d=>`
+    <div class="choice-chip" onclick="selectDrink('${d.id}')">
+      ${d.name}
+      <span style="font-size:0.75rem;color:var(--gold)">฿${d.price}</span>
+    </div>
+  `).join('');
+
+  c.innerHTML=`
+  <div class="section-title">🥤 เมนูเครื่องดื่ม</div>
+  <div class="unified-block">
+    <div class="unified-header">
+      <div class="unified-icon">🥤</div>
+      <div class="unified-title-col">
+        <div class="unified-name">เครื่องดื่ม</div>
+        <div class="unified-hint">เลือกเมนู + หวาน + น้ำแข็ง</div>
+      </div>
+    </div>
+
+    <div class="unified-body">
+      <div class="choices-label">เลือกเมนู</div>
+      <div class="choices-grid">${chips}</div>
+
+      <div class="choices-label">ระดับหวาน</div>
+      <div class="choices-grid">
+        ${SWEET_LEVEL.map(s=>`<div class="choice-chip" onclick="selectSweet('${s}')">${s}</div>`).join('')}
+      </div>
+
+      <div id="ice-section">
+        <div class="choices-label">น้ำแข็ง</div>
+        <div class="choices-grid">
+          ${ICE_LEVEL.map(i=>`<div class="choice-chip" onclick="selectIce('${i}')">${i}</div>`).join('')}
+        </div>
+      </div>
+
+      <div class="selection-display">
+        <span id="drink-preview">ยังไม่ได้เลือก</span>
+      </div>
+    </div>
+
+    <div class="unified-footer">
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <span class="qty-num" id="drink-qty">1</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+      <button class="add-btn" onclick="addDrink()">➕ เพิ่มลงบิล</button>
+    </div>
+  </div>
+  `;
+
+  renderTableGrid();
+}
+
+// ===== INTERACTION =====
+function selectDrink(id){
+  drinkSelected=id;
+  updatePreview();
+  updateIceVisibility();
+}
+
+function selectSweet(v){
+  sweetSelected=v;
+  updatePreview();
+}
+
+function selectIce(v){
+  iceSelected=v;
+  updatePreview();
+}
+
+function changeQty(d){
+  drinkQty=Math.max(1,drinkQty+d);
+  document.getElementById('drink-qty').textContent=drinkQty;
+  updatePreview();
+}
+
+function updateIceVisibility(){
+  const d=DRINKS.find(x=>x.id===drinkSelected);
+  const el=document.getElementById('ice-section');
+  if(!d)return;
+  el.style.display=(d.type==='hot')?'none':'block';
+}
+
+function updatePreview(){
+  const el=document.getElementById('drink-preview');
+  if(!drinkSelected){
+    el.textContent='ยังไม่ได้เลือก';
+    return;
+  }
+  const d=DRINKS.find(x=>x.id===drinkSelected);
+  let txt=`${d.name} (${sweetSelected}`;
+  if(d.type!=='hot') txt+=`, ${iceSelected}`;
+  txt+=`) = ฿${d.price*drinkQty}`;
+  el.textContent=txt;
+}
+
+// ===== BILL =====
+function addDrink(){
+  if(!drinkSelected){showToast('⚠️ เลือกเมนู');return;}
+
+  const d=DRINKS.find(x=>x.id===drinkSelected);
+
+  let name=`${d.name} (${sweetSelected}`;
+  if(d.type!=='hot') name+=`, ${iceSelected}`;
+  name+=`)`;
+
+  addBillItem({
+    name,
+    extras:[],
+    qty:drinkQty,
+    unitPrice:d.price,
+    total:d.price*drinkQty
+  });
+
+  showToast(`✅ เพิ่ม ${d.name}`);
+
+  drinkSelected=null;
+  drinkQty=1;
+  document.getElementById('drink-qty').textContent=1;
+  updatePreview();
+}
+
+function addBillItem(item){
+  item.seq=++itemSeq;
+  billItems.push(item);
+  updateBillUI();
+}
+
+function updateBillUI(){
+  const count=billItems.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('bill-count').textContent=count;
+
+  const total=billItems.reduce((s,i)=>s+i.total,0);
+  document.getElementById('bill-total').textContent=`฿${total}`;
+
+  renderBillBody();
+}
+
+function renderBillBody(){
+  const body=document.getElementById('bill-body');
+
+  if(billItems.length===0){
+    body.innerHTML='🍽️ ยังไม่มีรายการ';
+    return;
+  }
+
+  body.innerHTML=billItems.map(i=>`
+    <div class="bill-item">
+      <div style="flex:1">
+        <div class="bill-item-name">${i.name}</div>
+        <div class="bill-item-qty">฿${i.unitPrice} × ${i.qty}</div>
+      </div>
+      <div class="bill-item-price">฿${i.total}</div>
+    </div>
+  `).join('');
+}
+
+// ===== TABLE =====
+function renderTableGrid(){
+  const g=document.getElementById('table-grid');
+  if(!g)return;
+
+  g.innerHTML=TABLES.map(t=>`
+    <button class="table-btn ${selectedTable===t.id?'selected':''}"
+    onclick="selectTable('${t.id}')">${t.label}</button>
+  `).join('');
+}
+
+function selectTable(id){
+  selectedTable=id;
+  renderTableGrid();
+}
+
+// ===== PRINT =====
+function printBill(){
+  if(billItems.length===0){showToast('ไม่มีรายการ');return;}
+
+  let text='';
+  text+='\x1B\x40';
+
+  billItems.forEach((i,idx)=>{
+    text+=`${idx+1}. ${i.name}\n`;
+    text+=`   ${i.qty} x ${i.unitPrice} = ${i.total}\n`;
+  });
+
+  const total=billItems.reduce((s,i)=>s+i.total,0);
+  text+=`รวม: ${total} บาท\n`;
+
+  text+='\n\n\n\n';
+  text+='\x1D\x56\x41\x10';
+
+  const encoded=btoa(unescape(encodeURIComponent(text)));
+  window.location.href=`rawbt:base64,${encoded}`;
+}
+
+// ===== UTIL =====
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+function openBill() {
+  document.getElementById('bill-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  const now = new Date();
+  const el = document.getElementById('bill-datetime');
+  if (el) {
+    el.textContent = now.toLocaleString('th-TH', {
+      dateStyle: 'short',
+      timeStyle: 'short'
+    });
+  }
+
+  renderTableGrid();
+}
+
+function closeBill() {
+  document.getElementById('bill-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target.id === 'bill-overlay') {
+    closeBill();
+  }
+}
+// ===== INIT =====
+renderMenu();
+updateBillUI();
+</script>
+</body>
+</html>

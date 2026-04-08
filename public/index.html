@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ร้านปลข้าวขาหมู</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;700;900&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #c0392b;
+    --red-dark: #96281b;
+    --red-light: #e74c3c;
+    --gold: #e8a020;
+    --gold-light: #f5c842;
+    --cream: #fdf6e8;
+    --cream-dark: #f5e8c8;
+    --brown: #5a3825;
+    --brown-light: #8b5e3c;
+    --text: #2c1810;
+    --text-soft: #6b4226;
+    --white: #fff;
+    --shadow: 0 4px 20px rgba(90,56,37,0.15);
+    --shadow-strong: 0 8px 32px rgba(90,56,37,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--red-dark) 0%, var(--red) 50%, #d44000 100%);
+    color: var(--white);
+    text-align: center;
+    padding: 28px 20px 22px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(150,40,27,0.4);
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .header-inner { position: relative; }
+  .shop-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 4px; }
+
+  header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    text-shadow: 2px 3px 8px rgba(0,0,0,0.3);
+  }
+
+  header p {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .bill-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--gold);
+    color: var(--brown);
+    border: none;
+    border-radius: 50px;
+    padding: 14px 22px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-strong);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 200;
+    transition: all 0.2s;
+  }
+  .bill-toggle:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .bill-count {
+    background: var(--red);
+    color: white;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 100px;
+  }
+
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--red-dark);
+    padding: 10px 16px;
+    background: linear-gradient(90deg, rgba(192,57,43,0.12), transparent);
+    border-left: 4px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    margin: 28px 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .unified-block {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    border: 1.5px solid rgba(232,160,32,0.25);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+
+  .unified-header {
+    background: linear-gradient(135deg, var(--cream-dark), var(--cream));
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid rgba(232,160,32,0.2);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .unified-icon { font-size: 1.8rem; }
+  .unified-title-col { flex: 1; }
+  .unified-name { font-size: 1rem; font-weight: 800; color: var(--text); }
+  .unified-hint { font-size: 0.78rem; color: var(--text-soft); margin-top: 2px; }
+
+  .price-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .price-tag {
+    background: var(--red);
+    color: white;
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .price-tag.gold { background: var(--gold); color: var(--brown); }
+
+  .unified-body { padding: 14px 18px 16px; }
+
+  .choices-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .choices-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .choice-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 2px solid var(--cream-dark);
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    background: var(--cream);
+    color: var(--text-soft);
+    user-select: none;
+    position: relative;
+  }
+
+  .choice-chip:hover { border-color: var(--gold-light); background: rgba(232,160,32,0.08); }
+
+  .choice-chip.selected {
+    border-color: var(--gold);
+    background: rgba(232,160,32,0.18);
+    color: var(--brown);
+    box-shadow: 0 2px 8px rgba(232,160,32,0.25);
+  }
+
+  .choice-chip.disabled-chip {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .chip-badge {
+    position: absolute;
+    top: -8px; right: -8px;
+    background: var(--red);
+    color: white;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .chip-badge.show { display: flex; }
+
+  .selection-display {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .sel-label { font-size: 0.78rem; color: var(--text-soft); }
+  .sel-value { font-size: 0.88rem; font-weight: 700; color: var(--brown); }
+  .sel-price { font-size: 0.88rem; font-weight: 900; color: var(--red); margin-left: auto; }
+
+  .extras-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  /* ---- extra chip ---- */
+  .extra-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: var(--cream);
+    color: var(--text-soft);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .extra-chip:hover { border-color: var(--gold-light); background: rgba(232,160,32,0.08); }
+  .extra-chip.selected {
+    border-color: var(--gold);
+    background: rgba(232,160,32,0.18);
+    color: var(--brown);
+  }
+
+  /* noskin chips — disabled by default, unlock when meat is selected */
+  .extra-chip.noskin {
+    opacity: 0.35;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+  .extra-chip.noskin.unlocked {
+    opacity: 1;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  /* hint badge on noskin chips */
+  .noskin-hint {
+    font-size: 0.68rem;
+    background: rgba(192,57,43,0.12);
+    color: var(--red-dark);
+    border-radius: 8px;
+    padding: 1px 6px;
+    font-weight: 700;
+  }
+
+  .extra-price { font-size: 0.75rem; color: var(--gold); font-weight: 700; }
+
+  .unified-footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px 16px;
+    border-top: 1px dashed rgba(232,160,32,0.3);
+  }
+
+  .qty-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 4px 8px;
+  }
+
+  .qty-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cream-dark);
+    color: var(--brown);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .qty-btn:hover { background: var(--gold-light); }
+
+  .qty-num {
+    min-width: 24px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .add-btn {
+    flex: 1;
+    background: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .add-btn:hover { background: var(--red-light); transform: scale(1.02); }
+  .add-btn:active { transform: scale(0.97); }
+
+  /* ===== BILL ===== */
+  .bill-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44,24,16,0.6);
+    z-index: 300;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+  }
+  .bill-overlay.open { display: flex; }
+
+  .bill-sheet {
+    background: var(--white);
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    border-radius: 24px 24px 0 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -8px 40px rgba(90,56,37,0.3);
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .bill-header {
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: var(--white);
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .bill-header h2 { font-size: 1.2rem; font-weight: 800; }
+  .bill-header p  { font-size: 0.8rem; opacity: 0.8; }
+
+  .close-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .close-btn:hover { background: rgba(255,255,255,0.35); }
+
+  .table-selector {
+    background: var(--cream);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .table-selector-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-soft);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .table-required-hint { font-size: 0.72rem; color: var(--red); font-weight: 600; }
+
+  .table-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .table-btn {
+    min-width: 40px; height: 36px;
+    border-radius: 10px;
+    border: 2px solid var(--cream-dark);
+    background: var(--white);
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0 8px;
+  }
+  .table-btn:hover { border-color: var(--gold); background: rgba(232,160,32,0.08); }
+  .table-btn.selected { background: var(--red); border-color: var(--red); color: white; box-shadow: 0 2px 8px rgba(192,57,43,0.3); }
+  .table-btn.takeaway.selected { background: var(--brown); border-color: var(--brown); }
+
+  .bill-body { overflow-y: auto; flex: 1; padding: 16px 20px; }
+  .bill-empty { text-align: center; padding: 40px 20px; color: var(--text-soft); font-size: 0.95rem; }
+
+  .bill-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .bill-item:last-child { border-bottom: none; }
+  .bill-item-name { flex: 1; font-size: 0.92rem; font-weight: 600; line-height: 1.4; }
+  .bill-item-extras { font-size: 0.78rem; color: var(--text-soft); font-weight: 400; margin-top: 2px; }
+  .bill-item-qty { font-size: 0.85rem; color: var(--text-soft); white-space: nowrap; }
+  .bill-item-price { font-size: 0.95rem; font-weight: 800; color: var(--red); white-space: nowrap; }
+  .bill-item-del { background: none; border: none; color: #bbb; font-size: 1rem; cursor: pointer; padding: 2px 4px; transition: color 0.15s; }
+  .bill-item-del:hover { color: var(--red); }
+
+  .bill-footer {
+    background: var(--cream);
+    border-top: 2px solid var(--cream-dark);
+    padding: 16px 20px;
+  }
+  .bill-table-display { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 0.88rem; color: var(--text-soft); }
+  .bill-table-display strong { color: var(--red); font-size: 1rem; }
+  .bill-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .bill-total-label { font-size: 1.05rem; font-weight: 700; }
+  .bill-total-amount { font-size: 1.6rem; font-weight: 900; color: var(--red); }
+
+  .print-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--red-dark), var(--red));
+    color: var(--white);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: inherit;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .print-btn:hover { opacity: 0.9; }
+
+  .clear-btn {
+    width: 100%;
+    background: none;
+    border: 1.5px solid var(--cream-dark);
+    color: var(--text-soft);
+    border-radius: 14px;
+    padding: 10px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.15s;
+  }
+  .clear-btn:hover { background: var(--cream-dark); }
+
+  @media print {
+    body * { display: none !important; }
+    #print-area, #print-area * { display: block !important; }
+    #print-area { position: fixed; inset: 0; background: white; z-index: 9999; padding: 20px; font-family: 'Noto Sans Thai', sans-serif; }
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--brown);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 400;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 500px) {
+    header h1 { font-size: 1.5rem; }
+    .choices-grid { gap: 6px; }
+    .choice-chip { font-size: 0.82rem; padding: 7px 11px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="shop-icon">🍱</div>
+    <h1>ร้านปลข้าวขาหมู</h1>
+    <p>ข้าวขาหมู • ข้าวหมูแดง • ข้าวมันไก่ • ข้าวหมูกรอบ</p>
+  </div>
+</header>
+
+<div class="container" id="menu-container"></div>
+
+<button class="bill-toggle" onclick="openBill()">
+  🧾 บิล
+  <span class="bill-count" id="bill-count">0</span>
+</button>
+
+<div class="bill-overlay" id="bill-overlay" onclick="handleOverlayClick(event)">
+  <div class="bill-sheet">
+    <div class="bill-header">
+      <div>
+        <h2>🧾 บิลสั่งอาหาร</h2>
+        <p id="bill-datetime"></p>
+      </div>
+      <button class="close-btn" onclick="closeBill()">✕</button>
+    </div>
+
+    <div class="table-selector">
+      <div class="table-selector-title">
+        🪑 เลือกโต๊ะ <span class="table-required-hint" id="table-hint"></span>
+      </div>
+      <div class="table-grid" id="table-grid"></div>
+    </div>
+
+    <div class="bill-body" id="bill-body">
+      <div class="bill-empty">🍽️ ยังไม่มีรายการ<br>เลือกเมนูเพื่อเพิ่มลงบิล</div>
+    </div>
+
+    <div class="bill-footer">
+      <div class="bill-table-display" id="bill-table-display" style="display:none">
+        📍 โต๊ะ: <strong id="bill-table-name">—</strong>
+      </div>
+      <div class="bill-total">
+        <span class="bill-total-label">ยอดรวมทั้งหมด</span>
+        <span class="bill-total-amount" id="bill-total">฿0</span>
+      </div>
+      <button class="print-btn" onclick="printBill()">🖨️ พิมพ์บิล</button>
+      <button class="clear-btn" onclick="clearBill()">🗑️ ล้างบิลทั้งหมด</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div id="print-area" style="display:none"></div>
+
+<script>
+// ===== DATA =====
+const RICE_CHOICES = [
+  { id: 'km',  name: 'ขาหมู',   emoji: '🍖', basePrice: 50 },
+  { id: 'kmd', name: 'หมูแดง',  emoji: '🍗', basePrice: 50 },
+  { id: 'kmk', name: 'มันไก่',  emoji: '🍚', basePrice: 40 },
+  { id: 'kmg', name: 'หมูกรอบ', emoji: '🥩', basePrice: 60 },
+];
+
+const MIX_PRICE = { 2: 60, 3: 70 };
+const MAX_RICE = 3;
+
+const SIDE_MENUS = [
+  { id: 's0', name: 'ข้าวเปล่า',             emoji: '🍚',   price: 10 },
+  { id: 's1', name: 'ไก่สับ (เล็ก)',          emoji: '🍗',   price: 60 },
+  { id: 's2', name: 'ไก่สับ (ใหญ่)',          emoji: '🍗',   price: 100 },
+  { id: 's3', name: 'คากิ (เล็ก)',            emoji: '🦴',   price: 60 },
+  { id: 's4', name: 'คากิ (ใหญ่)',            emoji: '🦴',   price: 100 },
+  { id: 's5', name: 'คากิ + ขาหมู',          emoji: '🦴🍖', price: 100 },
+  { id: 's6', name: 'ขาหมูล้วนสับ',           emoji: '🍖',   price: 100 },
+  { id: 's7', name: 'หมูกรอบ + หมูแดงสับ',   emoji: '🥩🍗', price: 100 },
+  { id: 's8', name: 'กุนเชียงสับ',            emoji: '🌭',   price: 40, unit: 'ชิ้น' },
+  { id: 's9', name: 'หมูกรอบสับ', emoji: '🥩', price: 100 },
+];
+
+const DRINK_MENUS = [
+  { id:'d1',  name:'กาแฟเย็น',       price:30 },
+  { id:'d2',  name:'ชาเย็น',         price:30 },
+  { id:'d3',  name:'ชาเขียว',        price:30 },
+  { id:'d4',  name:'ชามะนาว',        price:30 },
+  { id:'d5',  name:'เนสกาแฟเย็น',   price:30 },
+  { id:'d6',  name:'โอวันติน',       price:30 },
+  { id:'d7',  name:'นมสด',           price:30 },
+  { id:'d8',  name:'นมเย็นโบราณ',   price:30 },
+  { id:'d9',  name:'แดงโซดามะนาว',  price:30 },
+  { id:'d10', name:'โอวันตินร้อน',   price:15 },
+  { id:'d11', name:'กาแฟโบราณร้อน', price:15 },
+  { id:'d12', name:'โอเลี้ยง',       price:20 },
+  { id:'d13', name:'น้ำอัดลม',       price:15 },
+  { id:'d14', name:'โกโก้',          price:30 },
+];
+
+const TABLES = [
+  ...Array.from({length:16}, (_,i) => ({ id:`t${i+1}`, label:`${i+1}` })),
+  { id:'ta', label:'A' },
+  { id:'tb', label:'B' },
+  { id:'tc', label:'C' },
+  { id:'takeaway', label:'🛍 กลับบ้าน', isTakeaway: true },
+];
+
+// ===== STATE =====
+let billItems = [];
+let itemSeq = 0;
+let selectedTable = null;
+
+// Rice
+let riceSelected = new Set();
+let riceExtras   = new Set();
+let riceQty      = 1;
+
+// Side
+let sideSelected = null;
+let sideQty      = 1;
+
+// Drink
+let drinkSelected = null;
+let drinkQty      = 1;
+
+// ===== NOSKIN RULES =====
+// ขาหมูไม่เอาหนัง → ต้องเลือก km (ขาหมู)
+// ไก่ไม่เอาหนัง   → ต้องเลือก kmk (มันไก่)
+const NOSKIN_REQUIRES = {
+  noskin_pork:    'km',
+  noskin_chicken: 'kmk',
+};
+
+// ===== PRICE CALC =====
+function getRicePrice() {
+  const n = riceSelected.size;
+  if (n === 0) return 0;
+  if (n === 1) {
+    const ch = RICE_CHOICES.find(c => c.id === [...riceSelected][0]);
+    return ch ? ch.basePrice : 50;
+  }
+  return MIX_PRICE[n] || 70;
+}
+
+function getRiceExtraPrice() {
+  let extra = 0;
+  if (riceExtras.has('special')) extra += 10;
+  if (riceExtras.has('egg'))     extra += 10;
+  if (riceExtras.has('sausage')) extra += 10;
+  return extra;
+}
+
+function getRiceTotalUnit() {
+  return getRicePrice() + getRiceExtraPrice();
+}
+
+// ===== RENDER =====
+function renderMenu() {
+  const c = document.getElementById('menu-container');
+  c.innerHTML =
+    `<div class="section-title">🍽️ ข้าว — เลือก 1–3 อย่าง</div>` + renderRiceBlock() +
+    `<div class="section-title">🥘 กับเปล่า</div>` + renderSideBlock() +
+    `<div class="section-title">🥤 เครื่องดื่ม</div>` + renderDrinkBlock();
+  renderTableGrid();
+}
+
+// ===== RICE BLOCK =====
+function renderRiceBlock() {
+  const chips = RICE_CHOICES.map(ch => `
+    <div class="choice-chip" id="chip-${ch.id}" onclick="toggleRiceChip('${ch.id}')">
+      ${ch.emoji} ${ch.name}
+      <span class="chip-badge" id="badge-${ch.id}"></span>
+    </div>
+  `).join('');
+
+  return `
+  <div class="unified-block">
+    <div class="unified-header">
+      <div class="unified-icon">🍱</div>
+      <div class="unified-title-col">
+        <div class="unified-name">ข้าว (เลือก 1–3 อย่าง)</div>
+        <div class="unified-hint">1 อย่าง = ราคาปกติ • 2 อย่าง = 60฿ • 3 อย่าง = 70฿</div>
+      </div>
+      <div class="price-tags">
+        <span class="price-tag">1×ราคาปกติ</span>
+        <span class="price-tag gold">2×60฿</span>
+        <span class="price-tag gold">3×70฿</span>
+      </div>
+    </div>
+    <div class="unified-body">
+      <div class="choices-label">เลือกเมนู</div>
+      <div class="choices-grid" id="rice-chips">${chips}</div>
+
+      <div class="selection-display" id="rice-preview">
+        <span class="sel-label">เลือก:</span>
+        <span class="sel-value" id="rice-sel-text">—</span>
+        <span class="sel-price" id="rice-sel-price"></span>
+      </div>
+
+      <div class="choices-label">เพิ่มเติม</div>
+      <div class="extras-row">
+        <div class="extra-chip" id="extra-special" onclick="toggleExtra('special')">
+          ⭐ พิเศษ <span class="extra-price">+10฿</span>
+        </div>
+        <div class="extra-chip" id="extra-egg" onclick="toggleExtra('egg')">
+          🥚 ไข่ <span class="extra-price">+10฿</span>
+        </div>
+        <div class="extra-chip" id="extra-sausage" onclick="toggleExtra('sausage')">
+          🌭 กุนเชียง <span class="extra-price">+10฿</span>
+        </div>
+        <div class="extra-chip noskin" id="extra-noskin-pork" onclick="toggleExtra('noskin_pork')">
+          🚫 ขาหมูไม่เอาหนัง
+          <span class="noskin-hint">เลือกขาหมูก่อน</span>
+        </div>
+        <div class="extra-chip noskin" id="extra-noskin-chicken" onclick="toggleExtra('noskin_chicken')">
+          🚫 ไก่ไม่เอาหนัง
+          <span class="noskin-hint">เลือกมันไก่ก่อน</span>
+        </div>
+      </div>
+    </div>
+    <div class="unified-footer">
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeRiceQty(-1)">−</button>
+        <span class="qty-num" id="rice-qty">1</span>
+        <button class="qty-btn" onclick="changeRiceQty(1)">+</button>
+      </div>
+      <button class="add-btn" onclick="addRice()">➕ เพิ่มลงบิล</button>
+    </div>
+  </div>`;
+}
+
+function toggleRiceChip(id) {
+  if (riceSelected.has(id)) {
+    riceSelected.delete(id);
+    // ถ้าเอาเมนูนี้ออก → ลบ noskin ที่ต้องการเมนูนี้ด้วย
+    for (const [nsKey, reqId] of Object.entries(NOSKIN_REQUIRES)) {
+      if (reqId === id && riceExtras.has(nsKey)) {
+        riceExtras.delete(nsKey);
+      }
+    }
+  } else {
+    if (riceSelected.size >= MAX_RICE) {
+      showToast(`⚠️ เลือกได้สูงสุด ${MAX_RICE} อย่าง`);
+      return;
+    }
+    riceSelected.add(id);
+  }
+  updateRiceUI();
+}
+
+function toggleExtra(key) {
+  // พิเศษ — ห้ามตอนสั่ง 3 อย่าง
+  if (key === 'special' && riceSelected.size >= 3) {
+    showToast('⚠️ ไม่สามารถเพิ่มพิเศษได้เมื่อสั่ง 3 อย่าง');
+    return;
+  }
+
+  // noskin — ต้องมีเมนูที่กำหนด
+  if (key in NOSKIN_REQUIRES) {
+    const reqId = NOSKIN_REQUIRES[key];
+    if (!riceSelected.has(reqId)) {
+      const reqName = RICE_CHOICES.find(c => c.id === reqId)?.name || '';
+      showToast(`⚠️ กรุณาเลือก "${reqName}" ก่อน`);
+      return;
+    }
+  }
+
+  if (riceExtras.has(key)) riceExtras.delete(key);
+  else riceExtras.add(key);
+
+  updateRiceUI();
+}
+
+function changeRiceQty(d) {
+  riceQty = Math.max(1, riceQty + d);
+  const el = document.getElementById('rice-qty');
+  if (el) el.textContent = riceQty;
+  updateRicePreview();
+}
+
+function updateRiceUI() {
+  const n = riceSelected.size;
+
+  // ---- อัปเดต chip หลัก ----
+  RICE_CHOICES.forEach(ch => {
+    const chip  = document.getElementById('chip-' + ch.id);
+    const badge = document.getElementById('badge-' + ch.id);
+    if (!chip) return;
+
+    const isSelected = riceSelected.has(ch.id);
+    chip.classList.toggle('selected', isSelected);
+
+    if (isSelected) {
+      const order = [...riceSelected].indexOf(ch.id) + 1;
+      badge.textContent = order;
+      badge.classList.add('show');
+      chip.classList.remove('disabled-chip');
+    } else {
+      badge.classList.remove('show');
+      chip.classList.toggle('disabled-chip', n >= MAX_RICE);
+    }
+  });
+
+  // ---- พิเศษ (ห้ามตอน 3 อย่าง) ----
+  const specialEl = document.getElementById('extra-special');
+  if (specialEl) {
+    if (n >= 3) {
+      riceExtras.delete('special');
+      specialEl.classList.remove('selected');
+      specialEl.classList.add('disabled-chip');
+    } else {
+      specialEl.classList.remove('disabled-chip');
+    }
+  }
+
+  // ---- extra chip ปกติ (egg, sausage) ----
+  ['egg', 'sausage'].forEach(k => {
+    const el = document.getElementById('extra-' + k);
+    if (el) el.classList.toggle('selected', riceExtras.has(k));
+  });
+
+  // ---- noskin chips ----
+  // รูปแบบ: extra-noskin-pork, extra-noskin-chicken
+  for (const [nsKey, reqId] of Object.entries(NOSKIN_REQUIRES)) {
+    const elId  = 'extra-noskin-' + nsKey.replace('noskin_', '');  // noskin_pork → pork
+    const el    = document.getElementById(elId);
+    const hint  = el ? el.querySelector('.noskin-hint') : null;
+    if (!el) continue;
+
+    const hasMeat = riceSelected.has(reqId);
+
+    if (hasMeat) {
+      // unlock
+      el.classList.add('unlocked');
+      el.classList.toggle('selected', riceExtras.has(nsKey));
+      if (hint) hint.style.display = 'none';
+    } else {
+      // lock: ลบ state ถ้ายังค้างอยู่
+      riceExtras.delete(nsKey);
+      el.classList.remove('unlocked', 'selected');
+      if (hint) hint.style.display = '';
+    }
+  }
+
+  updateRicePreview();
+}
+
+function updateRicePreview() {
+  const selText  = document.getElementById('rice-sel-text');
+  const selPrice = document.getElementById('rice-sel-price');
+  if (!selText) return;
+
+  if (riceSelected.size === 0) {
+    selText.textContent  = '—';
+    selPrice.textContent = '';
+    return;
+  }
+
+  const items = [...riceSelected].map(id => RICE_CHOICES.find(c => c.id === id));
+  const n     = items.length;
+  let name    = n === 1 ? `ข้าว${items[0].name}` : items.map(c => c.name).join(' + ');
+  const extras = [...riceExtras].map(e => {
+    const labels = { special:'พิเศษ', egg:'ไข่', sausage:'กุนเชียง', noskin_pork:'ไม่เอาหนัง(หมู)', noskin_chicken:'ไม่เอาหนัง(ไก่)' };
+    return labels[e] || e;
+  });
+  if (extras.length) name += ` [${extras.join(', ')}]`;
+
+  selText.textContent  = name;
+  const unit = getRiceTotalUnit();
+  selPrice.textContent = `฿${unit} × ${riceQty} = ฿${unit * riceQty}`;
+}
+
+function addRice() {
+  if (riceSelected.size === 0) {
+    showToast('⚠️ กรุณาเลือกเมนูข้าวอย่างน้อย 1 อย่าง');
+    return;
+  }
+
+  const n             = riceSelected.size;
+  const selectedItems = [...riceSelected].map(id => RICE_CHOICES.find(c => c.id === id));
+  const extraLabels   = [...riceExtras].map(e => {
+    const labels = { special:'พิเศษ', egg:'ไข่', sausage:'กุนเชียง', noskin_pork:'ขาหมูไม่เอาหนัง', noskin_chicken:'ไก่ไม่เอาหนัง' };
+    return labels[e] || e;
+  });
+  const unitPrice = getRiceTotalUnit();
+  const qty       = riceQty;
+
+  const name = n === 1
+    ? `ข้าว${selectedItems[0].name}`
+    : `ข้าวผสม ${n} อย่าง (${selectedItems.map(c => c.name).join(' + ')})`;
+
+  addBillItem({ name, extras: extraLabels, qty, unitPrice, total: unitPrice * qty });
+  showToast(`✅ เพิ่ม ${name} × ${qty}`);
+
+  // Reset
+  riceSelected.clear();
+  riceExtras.clear();
+  riceQty = 1;
+  const qEl = document.getElementById('rice-qty');
+  if (qEl) qEl.textContent = 1;
+  updateRiceUI();
+}
+
+// ===== SIDE BLOCK =====
+function renderSideBlock() {
+  const chips = SIDE_MENUS.map(s => `
+    <div class="choice-chip side-chip" id="schip-${s.id}" onclick="toggleSideChip('${s.id}')">
+      <span>${s.emoji} ${s.name}</span>
+      <span style="font-size:0.78rem;color:var(--gold);font-weight:700;margin-left:4px">฿${s.price}${s.unit ? `/${s.unit}` : ''}</span>
+    </div>
+  `).join('');
+
+  return `
+  <div class="unified-block">
+    <div class="unified-header">
+      <div class="unified-icon">🥘</div>
+      <div class="unified-title-col">
+        <div class="unified-name">กับเปล่า</div>
+        <div class="unified-hint">เลือก 1 อย่าง แล้วกำหนดจำนวน</div>
+      </div>
+    </div>
+    <div class="unified-body">
+      <div class="choices-label">เลือกเมนู</div>
+      <div class="choices-grid" id="side-chips">${chips}</div>
+      <div class="selection-display" id="side-preview">
+        <span class="sel-label">เลือก:</span>
+        <span class="sel-value" id="side-sel-text">—</span>
+        <span class="sel-price" id="side-sel-price"></span>
+      </div>
+    </div>
+    <div class="unified-footer">
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeSideQty(-1)">−</button>
+        <span class="qty-num" id="side-qty">1</span>
+        <button class="qty-btn" onclick="changeSideQty(1)">+</button>
+      </div>
+      <button class="add-btn" onclick="addSideBlock()">➕ เพิ่มลงบิล</button>
+    </div>
+  </div>`;
+}
+
+function toggleSideChip(id) {
+  sideSelected = sideSelected === id ? null : id;
+  sideQty = 1;
+  updateSideUI();
+}
+
+function changeSideQty(d) {
+  sideQty = Math.max(1, sideQty + d);
+  const el = document.getElementById('side-qty');
+  if (el) el.textContent = sideQty;
+  updateSidePreview();
+}
+
+function updateSideUI() {
+  SIDE_MENUS.forEach(s => {
+    const chip = document.getElementById('schip-' + s.id);
+    if (chip) chip.classList.toggle('selected', sideSelected === s.id);
+  });
+  const qEl = document.getElementById('side-qty');
+  if (qEl) qEl.textContent = sideQty;
+  updateSidePreview();
+}
+
+function updateSidePreview() {
+  const selText  = document.getElementById('side-sel-text');
+  const selPrice = document.getElementById('side-sel-price');
+  if (!selText) return;
+  if (!sideSelected) { selText.textContent = '—'; selPrice.textContent = ''; return; }
+  const s = SIDE_MENUS.find(x => x.id === sideSelected);
+  selText.textContent  = `${s.emoji} ${s.name}`;
+  selPrice.textContent = `฿${s.price} × ${sideQty} = ฿${(s.price * sideQty).toLocaleString()}`;
+}
+
+function addSideBlock() {
+  if (!sideSelected) { showToast('⚠️ กรุณาเลือกกับเปล่า'); return; }
+  const s = SIDE_MENUS.find(x => x.id === sideSelected);
+  addBillItem({ name: s.name, extras: [], qty: sideQty, unitPrice: s.price, total: s.price * sideQty });
+  showToast(`✅ เพิ่ม ${s.name} × ${sideQty}`);
+  sideSelected = null; sideQty = 1;
+  updateSideUI();
+}
+
+// ===== DRINK BLOCK =====
+function renderDrinkBlock() {
+  const chips = DRINK_MENUS.map(d => `
+    <div class="choice-chip" id="dchip-${d.id}" onclick="toggleDrink('${d.id}')">
+      🥤 ${d.name}
+      <span style="font-size:0.78rem;color:var(--gold);font-weight:700;margin-left:4px">฿${d.price}</span>
+    </div>
+  `).join('');
+
+  return `
+  <div class="unified-block">
+    <div class="unified-header">
+      <div class="unified-icon">🥤</div>
+      <div class="unified-title-col">
+        <div class="unified-name">เครื่องดื่ม</div>
+        <div class="unified-hint">เลือก 1 อย่าง แล้วกำหนดจำนวน</div>
+      </div>
+    </div>
+    <div class="unified-body">
+      <div class="choices-label">เลือกเมนู</div>
+      <div class="choices-grid">${chips}</div>
+      <div class="selection-display">
+        <span class="sel-label">เลือก:</span>
+        <span class="sel-value" id="drink-text">—</span>
+        <span class="sel-price" id="drink-price"></span>
+      </div>
+    </div>
+    <div class="unified-footer">
+      <div class="qty-control">
+        <button class="qty-btn" onclick="changeDrinkQty(-1)">−</button>
+        <span class="qty-num" id="drink-qty">1</span>
+        <button class="qty-btn" onclick="changeDrinkQty(1)">+</button>
+      </div>
+      <button class="add-btn" onclick="addDrink()">➕ เพิ่มลงบิล</button>
+    </div>
+  </div>`;
+}
+
+function toggleDrink(id) {
+  drinkSelected = drinkSelected === id ? null : id;
+  drinkQty = 1;
+  updateDrinkUI();
+}
+
+function changeDrinkQty(d) {
+  drinkQty = Math.max(1, drinkQty + d);
+  document.getElementById('drink-qty').textContent = drinkQty;
+  updateDrinkPreview();
+}
+
+function updateDrinkUI() {
+  DRINK_MENUS.forEach(d => {
+    const el = document.getElementById('dchip-' + d.id);
+    if (el) el.classList.toggle('selected', drinkSelected === d.id);
+  });
+  document.getElementById('drink-qty').textContent = drinkQty;
+  updateDrinkPreview();
+}
+
+function updateDrinkPreview() {
+  const text  = document.getElementById('drink-text');
+  const price = document.getElementById('drink-price');
+  if (!drinkSelected) { text.textContent = '—'; price.textContent = ''; return; }
+  const d = DRINK_MENUS.find(x => x.id === drinkSelected);
+  text.textContent  = d.name;
+  price.textContent = `฿${d.price} × ${drinkQty} = ฿${d.price * drinkQty}`;
+}
+
+function addDrink() {
+  if (!drinkSelected) { showToast('⚠️ กรุณาเลือกเครื่องดื่ม'); return; }
+  const d = DRINK_MENUS.find(x => x.id === drinkSelected);
+  addBillItem({ name: d.name, extras: [], qty: drinkQty, unitPrice: d.price, total: d.price * drinkQty });
+  showToast(`✅ เพิ่ม ${d.name} × ${drinkQty}`);
+  drinkSelected = null; drinkQty = 1;
+  updateDrinkUI();
+}
+
+// ===== TABLE =====
+function renderTableGrid() {
+  const g = document.getElementById('table-grid');
+  if (!g) return;
+  g.innerHTML = TABLES.map(t => `
+    <button class="table-btn${t.isTakeaway ? ' takeaway' : ''}${selectedTable === t.id ? ' selected' : ''}"
+      onclick="selectTable('${t.id}')">${t.label}</button>
+  `).join('');
+}
+
+function selectTable(id) {
+  selectedTable = id;
+  renderTableGrid();
+  updateTableDisplay();
+  const hint = document.getElementById('table-hint');
+  if (hint) hint.textContent = '';
+}
+
+function getTableLabel() {
+  const t = TABLES.find(t => t.id === selectedTable);
+  if (!t) return null;
+  return t.isTakeaway ? 'สั่งกลับบ้าน' : `โต๊ะ ${t.label}`;
+}
+
+function updateTableDisplay() {
+  const disp  = document.getElementById('bill-table-display');
+  const name  = document.getElementById('bill-table-name');
+  const label = getTableLabel();
+  if (label) { disp.style.display = 'flex'; name.textContent = label; }
+  else { disp.style.display = 'none'; }
+}
+
+// ===== BILL =====
+function addBillItem(item) {
+  item.seq = ++itemSeq;
+  billItems.push(item);
+  updateBillUI();
+}
+
+function updateBillUI() {
+  const count = billItems.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('bill-count').textContent = count;
+  const total = billItems.reduce((s, i) => s + i.total, 0);
+  document.getElementById('bill-total').textContent = `฿${total.toLocaleString()}`;
+  renderBillBody();
+}
+
+function renderBillBody() {
+  const body = document.getElementById('bill-body');
+  if (billItems.length === 0) {
+    body.innerHTML = '<div class="bill-empty">🍽️ ยังไม่มีรายการ<br>เลือกเมนูเพื่อเพิ่มลงบิล</div>';
+    return;
+  }
+  body.innerHTML = billItems.map(item => `
+    <div class="bill-item">
+      <div style="flex:1">
+        <div class="bill-item-name">${item.name}</div>
+        ${item.extras.length ? `<div class="bill-item-extras">+ ${item.extras.join(', ')}</div>` : ''}
+        <div class="bill-item-qty">฿${item.unitPrice} × ${item.qty}</div>
+      </div>
+      <div class="bill-item-price">฿${item.total.toLocaleString()}</div>
+      <button class="bill-item-del" onclick="removeBillItem(${item.seq})" title="ลบ">🗑</button>
+    </div>
+  `).join('');
+}
+
+function removeBillItem(seq) {
+  billItems = billItems.filter(i => i.seq !== seq);
+  updateBillUI();
+}
+
+function clearBill() {
+  if (!billItems.length) return;
+  if (confirm('ล้างบิลทั้งหมดใช่ไหม?')) { billItems = []; updateBillUI(); }
+}
+
+function openBill() {
+  const now = new Date();
+  document.getElementById('bill-datetime').textContent = now.toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' });
+  document.getElementById('bill-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderTableGrid();
+  updateTableDisplay();
+}
+
+function closeBill() {
+  document.getElementById('bill-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('bill-overlay')) closeBill();
+}
+
+// ===== PRINT =====
+function printBill() {
+  if (!billItems.length) { showToast('⚠️ ไม่มีรายการในบิล'); return; }
+  if (!selectedTable)    { showToast('⚠️ กรุณาเลือกโต๊ะก่อนพิมพ์'); return; }
+
+  const now        = new Date();
+  const dateStr    = now.toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' });
+  const tableLabel = getTableLabel();
+  const total      = billItems.reduce((s, i) => s + i.total, 0);
+
+  let text = '\x1B\x40';
+  text += '\x1B\x61\x01\x1B\x21\x30';
+  text += 'ร้านปลข้าวขาหมู\n';
+  text += '\x1B\x21\x00\x1B\x61\x01';
+  text += '-----------------------------\n';
+  text += '\x1B\x61\x00';
+  text += `${dateStr}\n`;
+  text += `โต๊ะ: ${tableLabel}\n`;
+  text += '-----------------------------\n';
+  billItems.forEach((item, i) => {
+    text += `${i + 1}. ${item.name}\n`;
+    if (item.extras.length) text += `   + ${item.extras.join(', ')}\n`;
+    text += `   ${item.qty} x ${item.unitPrice} = ${item.total}\n`;
+  });
+  text += '-----------------------------\n';
+  text += '\x1B\x45\x01\x1B\x61\x02';
+  text += `รวม: ${total} บาท\n`;
+  text += '\x1B\x45\x00\x1B\x61\x01';
+  text += '\nขอบคุณที่ใช้บริการ\n\n\n\n';
+  text += '\x1D\x56\x00';
+
+  const encoded = btoa(unescape(encodeURIComponent(text)));
+  try { window.location.href = `rawbt:base64,${encoded}`; }
+  catch(e) { showToast('❌ เปิด RawBT ไม่ได้'); return; }
+
+  setTimeout(() => { billItems = []; updateBillUI(); closeBill(); }, 800);
+}
+
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ===== INIT =====
+renderMenu();
+updateBillUI();
+</script>
+</body>
+</html>
