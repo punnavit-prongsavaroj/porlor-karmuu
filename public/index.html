@@ -323,7 +323,8 @@
     min-width: 24px;
     text-align: center;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1.35rem;
+    text-decoration: underline;
   }
 
   .add-btn {
@@ -455,8 +456,8 @@
     border-top: 2px solid var(--cream-dark);
     padding: 16px 20px;
   }
-  .bill-table-display { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 0.88rem; color: var(--text-soft); }
-  .bill-table-display strong { color: var(--red); font-size: 1rem; }
+  .bill-table-display { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; margin-bottom: 12px; font-size: 0.88rem; color: var(--text-soft); }
+  .bill-table-display strong { color: var(--red); font-size: 2rem; font-weight: 900; line-height: 1.1; display: block; }
   .bill-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .bill-total-label { font-size: 1.05rem; font-weight: 700; }
   .bill-total-amount { font-size: 1.6rem; font-weight: 900; color: var(--red); }
@@ -619,6 +620,7 @@ const DRINK_MENUS = [
   { id:'d12', name:'โอเลี้ยง',       price:20 },
   { id:'d13', name:'น้ำอัดลม',       price:15 },
   { id:'d14', name:'โกโก้',          price:30 },
+  { id:'d15', name:'น้ำเปล่า',       price:10 },
 ];
 
 const TABLES = [
