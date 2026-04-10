@@ -242,7 +242,6 @@
     margin-bottom: 12px;
   }
 
-  /* ---- extra chip ---- */
   .extra-chip {
     display: flex;
     align-items: center;
@@ -265,7 +264,6 @@
     color: var(--brown);
   }
 
-  /* noskin chips — disabled by default, unlock when meat is selected */
   .extra-chip.noskin {
     opacity: 0.35;
     pointer-events: none;
@@ -276,7 +274,6 @@
     pointer-events: auto;
     cursor: pointer;
   }
-  /* hint badge on noskin chips */
   .noskin-hint {
     font-size: 0.68rem;
     background: rgba(192,57,43,0.12);
@@ -475,6 +472,7 @@
     cursor: pointer;
     transition: opacity 0.2s;
     display: flex; align-items: center; justify-content: center; gap: 8px;
+    margin-bottom: 8px;
   }
   .print-btn:hover { opacity: 0.9; }
 
@@ -488,15 +486,94 @@
     font-family: inherit;
     font-size: 0.88rem;
     cursor: pointer;
-    margin-top: 8px;
+    margin-top: 0px;
     transition: background 0.15s;
   }
   .clear-btn:hover { background: var(--cream-dark); }
 
+  /* ===== PRINT STYLES ===== */
   @media print {
     body * { display: none !important; }
     #print-area, #print-area * { display: block !important; }
-    #print-area { position: fixed; inset: 0; background: white; z-index: 9999; padding: 20px; font-family: 'Noto Sans Thai', sans-serif; }
+    #print-area {
+      position: fixed; inset: 0; background: white; z-index: 9999;
+      padding: 20px; font-family: 'Noto Sans Thai', sans-serif;
+    }
+  }
+
+  /* ===== RECEIPT PREVIEW STYLES ===== */
+  .receipt-preview {
+    max-width: 320px;
+    margin: 0 auto;
+    font-family: 'Noto Sans Thai', 'Sarabun', sans-serif;
+    color: #111;
+  }
+  .receipt-preview h2 {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 900;
+    margin-bottom: 4px;
+  }
+  .receipt-preview .receipt-date {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .receipt-preview hr {
+    border: none;
+    border-top: 1px dashed #999;
+    margin: 8px 0;
+  }
+  .receipt-item {
+    margin-bottom: 10px;
+  }
+  .receipt-item-name {
+    font-size: 1.1rem;       /* ชื่ออาหาร */
+    font-weight: 700;
+  }
+  .receipt-item-extras {
+    font-size: 0.85rem;
+    color: #555;
+    margin-left: 8px;
+  }
+  .receipt-item-qty {
+    text-align: right;
+    font-size: 1.4rem;       /* จำนวน × ราคา — ใหญ่ขึ้น */
+    font-weight: 900;
+    color: #c0392b;
+  }
+  .receipt-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 4px;
+  }
+  .receipt-total-label {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .receipt-total-amount {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #c0392b;
+  }
+  .receipt-table-footer {
+    text-align: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px dashed #999;
+  }
+  .receipt-table-footer .table-label-small {
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .receipt-table-footer .table-number {
+    font-size: 3.2rem;       /* โต๊ะ — ใหญ่ 2× จากเดิม 1.6rem */
+    font-weight: 900;
+    color: #c0392b;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
   }
 
   .toast {
@@ -571,6 +648,7 @@
         <span class="bill-total-label">ยอดรวมทั้งหมด</span>
         <span class="bill-total-amount" id="bill-total">฿0</span>
       </div>
+      <button class="print-btn" onclick="previewBill()">👁️ Preview ใบเสร็จ</button>
       <button class="print-btn" onclick="printBill()">🖨️ พิมพ์บิล</button>
       <button class="clear-btn" onclick="clearBill()">🗑️ ล้างบิลทั้งหมด</button>
     </div>
@@ -636,22 +714,16 @@ let billItems = [];
 let itemSeq = 0;
 let selectedTable = null;
 
-// Rice
 let riceSelected = new Set();
 let riceExtras   = new Set();
 let riceQty      = 1;
 
-// Side
 let sideSelected = null;
 let sideQty      = 1;
 
-// Drink
 let drinkSelected = null;
 let drinkQty      = 1;
 
-// ===== NOSKIN RULES =====
-// ขาหมูไม่เอาหนัง → ต้องเลือก km (ขาหมู)
-// ไก่ไม่เอาหนัง   → ต้องเลือก kmk (มันไก่)
 const NOSKIN_REQUIRES = {
   noskin_pork:    'km',
   noskin_chicken: 'kmk',
@@ -758,7 +830,6 @@ function renderRiceBlock() {
 function toggleRiceChip(id) {
   if (riceSelected.has(id)) {
     riceSelected.delete(id);
-    // ถ้าเอาเมนูนี้ออก → ลบ noskin ที่ต้องการเมนูนี้ด้วย
     for (const [nsKey, reqId] of Object.entries(NOSKIN_REQUIRES)) {
       if (reqId === id && riceExtras.has(nsKey)) {
         riceExtras.delete(nsKey);
@@ -775,13 +846,11 @@ function toggleRiceChip(id) {
 }
 
 function toggleExtra(key) {
-  // พิเศษ — ห้ามตอนสั่ง 3 อย่าง
   if (key === 'special' && riceSelected.size >= 3) {
     showToast('⚠️ ไม่สามารถเพิ่มพิเศษได้เมื่อสั่ง 3 อย่าง');
     return;
   }
 
-  // noskin — ต้องมีเมนูที่กำหนด
   if (key in NOSKIN_REQUIRES) {
     const reqId = NOSKIN_REQUIRES[key];
     if (!riceSelected.has(reqId)) {
@@ -807,7 +876,6 @@ function changeRiceQty(d) {
 function updateRiceUI() {
   const n = riceSelected.size;
 
-  // ---- อัปเดต chip หลัก ----
   RICE_CHOICES.forEach(ch => {
     const chip  = document.getElementById('chip-' + ch.id);
     const badge = document.getElementById('badge-' + ch.id);
@@ -827,7 +895,6 @@ function updateRiceUI() {
     }
   });
 
-  // ---- พิเศษ (ห้ามตอน 3 อย่าง) ----
   const specialEl = document.getElementById('extra-special');
   if (specialEl) {
     if (n >= 3) {
@@ -839,16 +906,13 @@ function updateRiceUI() {
     }
   }
 
-  // ---- extra chip ปกติ (egg, sausage) ----
   ['egg', 'sausage'].forEach(k => {
     const el = document.getElementById('extra-' + k);
     if (el) el.classList.toggle('selected', riceExtras.has(k));
   });
 
-  // ---- noskin chips ----
-  // รูปแบบ: extra-noskin-pork, extra-noskin-chicken
   for (const [nsKey, reqId] of Object.entries(NOSKIN_REQUIRES)) {
-    const elId  = 'extra-noskin-' + nsKey.replace('noskin_', '');  // noskin_pork → pork
+    const elId  = 'extra-noskin-' + nsKey.replace('noskin_', '');
     const el    = document.getElementById(elId);
     const hint  = el ? el.querySelector('.noskin-hint') : null;
     if (!el) continue;
@@ -856,12 +920,10 @@ function updateRiceUI() {
     const hasMeat = riceSelected.has(reqId);
 
     if (hasMeat) {
-      // unlock
       el.classList.add('unlocked');
       el.classList.toggle('selected', riceExtras.has(nsKey));
       if (hint) hint.style.display = 'none';
     } else {
-      // lock: ลบ state ถ้ายังค้างอยู่
       riceExtras.delete(nsKey);
       el.classList.remove('unlocked', 'selected');
       if (hint) hint.style.display = '';
@@ -918,7 +980,6 @@ function addRice() {
   addBillItem({ name, extras: extraLabels, qty, unitPrice, total: unitPrice * qty });
   showToast(`✅ เพิ่ม ${name} × ${qty}`);
 
-  // Reset
   riceSelected.clear();
   riceExtras.clear();
   riceQty = 1;
@@ -1178,7 +1239,65 @@ function handleOverlayClick(e) {
   if (e.target === document.getElementById('bill-overlay')) closeBill();
 }
 
-// ===== PRINT =====
+// ===== RECEIPT HTML BUILDER =====
+// สร้าง HTML ใบเสร็จที่ใช้ร่วมกันทั้ง preview และ print
+function buildReceiptHTML(dateStr, tableLabel, isTakeaway) {
+  const total = billItems.reduce((s, i) => s + i.total, 0);
+  const tableNumber = isTakeaway ? 'กลับบ้าน' : tableLabel.replace('โต๊ะ ', '');
+
+  let itemsHTML = '';
+  billItems.forEach((item, i) => {
+    itemsHTML += `
+      <div class="receipt-item">
+        <div class="receipt-item-name">${i + 1}. ${item.name}</div>
+        ${item.extras.length ? `<div class="receipt-item-extras">+ ${item.extras.join(', ')}</div>` : ''}
+        <div class="receipt-item-qty">${item.qty} × ${item.unitPrice} = ${item.total.toLocaleString()} บาท</div>
+      </div>
+    `;
+  });
+
+  return `
+    <div class="receipt-preview">
+      <h2>ร้านปลข้าวขาหมู</h2>
+      <div class="receipt-date">${dateStr}</div>
+      <hr>
+      ${itemsHTML}
+      <hr>
+      <div class="receipt-total-row">
+        <span class="receipt-total-label">รวมทั้งหมด</span>
+        <span class="receipt-total-amount">฿${total.toLocaleString()}</span>
+      </div>
+      <div class="receipt-table-footer">
+        <div class="table-label-small">📍 โต๊ะ</div>
+        <div class="table-number">${tableNumber}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ===== PREVIEW =====
+function previewBill() {
+  if (!billItems.length) {
+    showToast('⚠️ ไม่มีรายการในบิล');
+    return;
+  }
+  if (!selectedTable) {
+    showToast('⚠️ กรุณาเลือกโต๊ะก่อน');
+    return;
+  }
+
+  const now = new Date();
+  const dateStr = now.toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' });
+  const tableLabel = getTableLabel();
+  const t = TABLES.find(t => t.id === selectedTable);
+
+  const printArea = document.getElementById('print-area');
+  printArea.innerHTML = buildReceiptHTML(dateStr, tableLabel, t.isTakeaway);
+
+  window.print();
+}
+
+// ===== PRINT (RawBT) =====
 function printBill() {
   if (!billItems.length) { showToast('⚠️ ไม่มีรายการในบิล'); return; }
   if (!selectedTable)    { showToast('⚠️ กรุณาเลือกโต๊ะก่อนพิมพ์'); return; }
@@ -1186,28 +1305,42 @@ function printBill() {
   const now        = new Date();
   const dateStr    = now.toLocaleString('th-TH', { dateStyle:'short', timeStyle:'short' });
   const tableLabel = getTableLabel();
+  const t          = TABLES.find(t => t.id === selectedTable);
+  const tableNum   = t.isTakeaway ? 'กลับบ้าน' : tableLabel.replace('โต๊ะ ', '');
   const total      = billItems.reduce((s, i) => s + i.total, 0);
 
-  let text = '\x1B\x40';
-  text += '\x1B\x61\x01\x1B\x21\x30';
+  // ESC/POS commands
+  let text = '\x1B\x40';                         // init
+  text += '\x1B\x61\x01\x1B\x21\x30';           // center + double size
   text += 'ร้านปลข้าวขาหมู\n';
-  text += '\x1B\x21\x00\x1B\x61\x01';
+  text += '\x1B\x21\x00\x1B\x61\x01';           // normal + center
   text += '-----------------------------\n';
-  text += '\x1B\x61\x00';
+  text += '\x1B\x61\x00';                        // left
   text += `${dateStr}\n`;
-  text += `โต๊ะ: ${tableLabel}\n`;
   text += '-----------------------------\n';
+
   billItems.forEach((item, i) => {
     text += `${i + 1}. ${item.name}\n`;
     if (item.extras.length) text += `   + ${item.extras.join(', ')}\n`;
-    text += `   ${item.qty} x ${item.unitPrice} = ${item.total}\n`;
+    // จำนวน × ราคา — double height
+    text += '\x1B\x21\x10';                      // double height
+    text += `   ${item.qty} x ${item.unitPrice} = ${item.total} บาท\n`;
+    text += '\x1B\x21\x00';                      // normal
   });
+
   text += '-----------------------------\n';
-  text += '\x1B\x45\x01\x1B\x61\x02';
+  text += '\x1B\x45\x01\x1B\x61\x02';           // bold + right
   text += `รวม: ${total} บาท\n`;
-  text += '\x1B\x45\x00\x1B\x61\x01';
-  text += '\nขอบคุณที่ใช้บริการ\n\n\n\n';
-  text += '\x1D\x56\x00';
+  text += '\x1B\x45\x00';
+
+  // โต๊ะ — ใหญ่มากที่ด้านล่าง (double width + double height = 4×)
+  text += '\x1B\x61\x01';                        // center
+  text += '-----------------------------\n';
+  text += '\x1B\x21\x38';                        // double width + double height + bold
+  text += `${tableNum}\n`;
+  text += '\x1B\x21\x00';
+  text += '\n\n\n\n';
+  text += '\x1D\x56\x00';                        // cut
 
   const encoded = btoa(unescape(encodeURIComponent(text)));
   try { window.location.href = `rawbt:base64,${encoded}`; }
